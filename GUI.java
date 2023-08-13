@@ -47,7 +47,7 @@ public class GUI implements ActionListener {
     private int newInt = 0;
     private int lastInt = 0;
 
-    private double newDouble= 0;
+    private double newDouble = 0;
     private double lastDouble = 0;
 
     boolean add = false;
@@ -77,9 +77,9 @@ public class GUI implements ActionListener {
         nums = new JLabel(someString);
 
         nums.setForeground(Color.BLACK);
-        nums.setBounds(8,10 , 230, 50); // Set the position and dimensions
+        nums.setBounds(8, 10, 230, 50); // Set the position and dimensions
         nums.setHorizontalAlignment(JLabel.RIGHT);
-        nums.setFont(new Font("Comic Sans",Font.BOLD, 48));
+        nums.setFont(new Font("Comic Sans", Font.BOLD, 10));
         panel.add(nums);
 
         setNumberButtons();
@@ -240,7 +240,6 @@ public class GUI implements ActionListener {
         buttonPercentage.addActionListener(this);
 
 
-
 //        g.setFont(new Font("Times New Roman", Font.PLAIN, 50));
 //        g.drawString("7",10+10 + 0*60, 110);
 //        g.drawString("8",10+10 + 1*60, 110);
@@ -371,13 +370,7 @@ public class GUI implements ActionListener {
         if (e.getSource() == buttonClear) {
             nums.setText("0");
         } else if (e.getSource() == buttonEqual) {
-            boolean isDouble = false;
-            for (int i = 0; i < nums.getText().length(); i++) {
-                if (nums.getText().charAt(i) == '.') {
-                    isDouble = true;
-                }
-            }
-            if (isDouble) {
+            if (isDouble()) {
                 try {
                     newDouble = Double.parseDouble(nums.getText());
                 } catch (NumberFormatException exception) {
@@ -393,8 +386,9 @@ public class GUI implements ActionListener {
                 }
             }
             if (add) {
-                if (isDouble) {
+                if (isDouble()) {
                     nums.setText(String.valueOf(lastDouble + newDouble));
+
                 } else {
                     nums.setText(String.valueOf(lastInt + newInt));
                 }
@@ -403,46 +397,23 @@ public class GUI implements ActionListener {
             //TODO
         } else if (e.getSource() == buttonPercentage) {
             String tempString = "";
-            BigDecimal bd;
-                try {
-                    Double doubleValue = Double.parseDouble(nums.getText());
-                    bd = new BigDecimal(doubleValue/100.0);
-                    bd = bd.setScale(17,RoundingMode.HALF_UP);
-                    tempString = String.valueOf(bd);
-                    for (int i = tempString.length() - 1; i >= 0; i--) {
-                        if (tempString.charAt(i) == '0') {
-                            tempString = removeZeroes(tempString);
-                        } else {
-                            break;
-                        }
-                    }
-                } catch (NumberFormatException exception) {
-                    nums.setText("Error");
-                    System.out.println("Invalid double format");
-                }
-                tempString = removeEndDot(tempString);
-                nums.setText(tempString);
-        } else if (e.getSource() == buttonAdd) {
-            boolean isDouble = false;
-            for (int i = 0; i < nums.getText().length(); i++) {
-                if (nums.getText().charAt(i) == '.') {
-                    isDouble = true;
+            BigDecimal bd = new BigDecimal(numsToDouble()/100.0);
+            bd = bd.setScale(16, RoundingMode.HALF_UP);
+            tempString = String.valueOf(bd);
+            for (int i = tempString.length() - 1; i >= 0; i--) {
+                if (tempString.charAt(i) == '0') {
+                    tempString = removeZeroes(tempString);
+                } else {
+                    break;
                 }
             }
-            if (isDouble) {
-                try {
-                    lastDouble = Double.parseDouble(nums.getText());
-                } catch (NumberFormatException exception) {
-                    nums.setText("Error");
-                    System.out.println("Invalid double format");
-                }
+            tempString = removeEndDot(tempString);
+            nums.setText(tempString);
+        } else if (e.getSource() == buttonAdd) {
+            if (isDouble()) {
+                lastDouble = numsToDouble();
             } else {
-                try {
-                    lastInt = Integer.parseInt(nums.getText());
-                } catch (NumberFormatException exception) {
-                    nums.setText("Error");
-                    System.out.println("Invalid integer format");
-                }
+                lastInt = numsToInt();
             }
             nums.setText("0");
             add = true;
@@ -456,15 +427,15 @@ public class GUI implements ActionListener {
     }
 
     private String removeEndDot(String s) {
-        if (s.charAt(s.length()-1) == '.') {
-            return s.substring(0, s.length()-1);
+        if (s.charAt(s.length() - 1) == '.') {
+            return s.substring(0, s.length() - 1);
         } else {
             return s;
         }
     }
 
     private String removeZeroes(String s) {
-        return s.substring(0, s.length() - 1); // s.substring(0, index) goes from first index to 1 before the end index. s.substring(index + 1)
+        return s.substring(0, s.length()-1); // s.substring(0, index) goes from first index to 1 before the end index. s.substring(index + 1)
         // goes from index + 1 to the last index.
     }
 
@@ -473,5 +444,39 @@ public class GUI implements ActionListener {
         return new BigDecimal(-1);
     }
 
-    
+    private boolean isDouble() {
+        boolean isDouble = false;
+        for (int i = 0; i < nums.getText().length(); i++) {
+            if (nums.getText().charAt(i) == '.') {
+                isDouble = true;
+            }
+        }
+        return isDouble;
+    }
+
+    private double numsToDouble() {
+        double d = 0;
+        try {
+            d = Double.parseDouble(nums.getText());
+        } catch (NumberFormatException exception) {
+            nums.setText("Error");
+            System.out.println("Invalid double format");
+        }
+        return d;
+    }
+
+    private int numsToInt() {
+        int i = 0;
+        try {
+            i = Integer.parseInt(nums.getText());
+        } catch (NumberFormatException exception) {
+            nums.setText("Error");
+            System.out.println("Invalid integer format");
+        }
+        return i;
+    }
+
+    private BigDecimal getPercentage() {
+        return new BigDecimal(-1);
+    }
 }
