@@ -55,6 +55,8 @@ public class GUI implements ActionListener {
     boolean divide = false;
     boolean multiply = false;
 
+    private String dot = "";
+
     public GUI() {
         initialize();
     }
@@ -304,100 +306,155 @@ public class GUI implements ActionListener {
         if (nums.getText().length() == 8) {
             // If statement to prevent user from typing in too many characters.
         } else if (e.getSource() == button0) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("0");
             } else {
                 nums.setText(nums.getText() + "0");
             }
         } else if (e.getSource() == button1) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("1");
             } else {
                 nums.setText(nums.getText() + "1");
             }
         } else if (e.getSource() == button2) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("2");
             } else {
                 nums.setText(nums.getText() + "2");
             }
         } else if (e.getSource() == button3) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("3");
             } else {
                 nums.setText(nums.getText() + "3");
             }
         } else if (e.getSource() == button4) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("4");
             } else {
                 nums.setText(nums.getText() + "4");
             }
         } else if (e.getSource() == button5) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("5");
             } else {
                 nums.setText(nums.getText() + "5");
             }
         } else if (e.getSource() == button6) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("6");
             } else {
                 nums.setText(nums.getText() + "6");
             }
         } else if (e.getSource() == button7) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("7");
             } else {
                 nums.setText(nums.getText() + "7");
             }
         } else if (e.getSource() == button8) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("8");
             } else {
                 nums.setText(nums.getText() + "8");
             }
         } else if (e.getSource() == button9) {
+            if (dot.equals(".")) {
+                nums.setText(nums.getText() + dot);
+                dot = "";
+            }
             if (nums.getText().equals("0")) {
                 nums.setText("9");
             } else {
                 nums.setText(nums.getText() + "9");
             }
         } else if (e.getSource() == buttonDot) {
-            nums.setText(nums.getText() + ".");
+            dot = ".";
         }
 
         if (e.getSource() == buttonClear) {
             nums.setText("0");
         } else if (e.getSource() == buttonEqual) {
-            if (isDouble()) {
-                try {
-                    newDouble = Double.parseDouble(nums.getText());
-                } catch (NumberFormatException exception) {
-                    nums.setText("Error");
-                    System.out.println("Invalid double format");
-                }
-            } else {
-                try {
-                    newInt = Integer.parseInt(nums.getText());
-                } catch (NumberFormatException exception) {
-                    nums.setText("Error");
-                    System.out.println("Invalid integer format");
-                }
-            }
+            newDouble = numsToDouble(nums.getText());
+            String tempString = "";
             if (add) {
-                if (isDouble()) {
-                    nums.setText(String.valueOf(lastDouble + newDouble));
-
-                } else {
-                    nums.setText(String.valueOf(lastInt + newInt));
-                }
-                add = false;
+                lastDouble += newDouble;
             }
+            tempString = String.valueOf(lastDouble);
+            for (int i = tempString.length() - 1; i >= 0; i--) {
+                if (tempString.charAt(i) == '0') {
+                    tempString = removeZeroes(tempString);
+                } else {
+                    break;
+                }
+            }
+            tempString = removeEndDot(tempString);
+            nums.setText(tempString);
+//            if (isDouble(nums.getText())) {
+//                try {
+//                    newDouble = Double.parseDouble(nums.getText());
+//                } catch (NumberFormatException exception) {
+//                    nums.setText("Error");
+//                    System.out.println("Invalid double format");
+//                }
+//            } else {
+//                try {
+//                    newInt = Integer.parseInt(nums.getText());
+//                } catch (NumberFormatException exception) {
+//                    nums.setText("Error");
+//                    System.out.println("Invalid integer format");
+//                }
+//            }
+//            if (add) {
+////                if (isDouble(nums.getText())) {
+////                    nums.setText(String.valueOf(lastDouble + newDouble));
+////
+////                } else {
+////                    nums.setText(String.valueOf(lastInt + newInt));
+////                }
+////                add = false;
+//            }
             //TODO
         } else if (e.getSource() == buttonPercentage) {
             String tempString = "";
-            BigDecimal bd = new BigDecimal(numsToDouble()/100.0);
+            BigDecimal bd = new BigDecimal(numsToDouble(nums.getText())/100.0);
             bd = bd.setScale(16, RoundingMode.HALF_UP);
             tempString = String.valueOf(bd);
             for (int i = tempString.length() - 1; i >= 0; i--) {
@@ -410,11 +467,12 @@ public class GUI implements ActionListener {
             tempString = removeEndDot(tempString);
             nums.setText(tempString);
         } else if (e.getSource() == buttonAdd) {
-            if (isDouble()) {
-                lastDouble = numsToDouble();
-            } else {
-                lastInt = numsToInt();
-            }
+            lastDouble = numsToDouble(nums.getText());
+//            if (isDouble(nums.getText())) {
+//                lastDouble = numsToDouble(nums.getText());
+//            } else {
+//                lastInt = numsToInt(nums.getText());
+//            }
             nums.setText("0");
             add = true;
         } else if (e.getSource() == buttonSubtract) {
@@ -444,20 +502,21 @@ public class GUI implements ActionListener {
         return new BigDecimal(-1);
     }
 
-    private boolean isDouble() {
+    private boolean isDouble(String s) {
         boolean isDouble = false;
-        for (int i = 0; i < nums.getText().length(); i++) {
-            if (nums.getText().charAt(i) == '.') {
+        for (int i = 0; i < s.length(); i++) {
+            if (s.charAt(i) == '.') {
                 isDouble = true;
+                break;
             }
         }
         return isDouble;
     }
 
-    private double numsToDouble() {
+    private double numsToDouble(String s) {
         double d = 0;
         try {
-            d = Double.parseDouble(nums.getText());
+            d = Double.parseDouble(s);
         } catch (NumberFormatException exception) {
             nums.setText("Error");
             System.out.println("Invalid double format");
@@ -465,10 +524,10 @@ public class GUI implements ActionListener {
         return d;
     }
 
-    private int numsToInt() {
+    private int numsToInt(String s) {
         int i = 0;
         try {
-            i = Integer.parseInt(nums.getText());
+            i = Integer.parseInt(s);
         } catch (NumberFormatException exception) {
             nums.setText("Error");
             System.out.println("Invalid integer format");
