@@ -51,6 +51,9 @@ public class GUI implements ActionListener {
     private double lastDouble = 0;
 
     private double sum = 0;
+    private double quotient = 0;
+    private double difference = 0;
+    private double product = 0;
 
     boolean replace = false;
 
@@ -438,22 +441,32 @@ public class GUI implements ActionListener {
             nums.setText("0");
             add = false;
             sum = 0;
+            subtract = false;
+            difference = 0;
+            
         } else if (e.getSource() == buttonEqual) {
             String tempString;
             if (add) {
                 sum += numsToDouble(nums.getText());
-                tempString = String.valueOf(sum);
-                tempString = removeZeroes(tempString);
-                tempString = removeEndDot(tempString);
+                tempString = removeEndDot(removeZeroes(String.valueOf(sum)));
                 nums.setText(tempString);
                 sum = 0;
                 add = false;
             } else if (subtract) {
-                
+                difference -= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
+                nums.setText(tempString);
+                difference = 0;
+                subtract = false;
             } else if (divide) {
-
+                //TODO: Create divide button function.
             } else if (multiply) {
-
+                //TODO: Create mutiply button function.
+                product *= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+                nums.setText(tempString);
+                multiply = false;
+                product = 0;
             }
 //            newDouble = numsToDouble(nums.getText());
 //            String tempString = "";
@@ -500,16 +513,13 @@ public class GUI implements ActionListener {
             String tempString = "";
             BigDecimal bd = new BigDecimal(numsToDouble(nums.getText())/100.0);
             bd = bd.setScale(16, RoundingMode.HALF_UP);
-            tempString = String.valueOf(bd);
-            tempString = removeZeroes(tempString);
-            tempString = removeEndDot(tempString);
+            tempString = removeEndDot(removeZeroes(String.valueOf(bd)));
             nums.setText(tempString);
         } else if (e.getSource() == buttonAdd) {
             sum += numsToDouble(nums.getText());
             String tempString = String.valueOf(sum);
             if (add) {
-                tempString = removeZeroes(tempString);
-                tempString = removeEndDot(tempString);
+                tempString = removeEndDot(removeZeroes(tempString));
                 nums.setText(tempString);
             }
             add = true;
@@ -522,9 +532,29 @@ public class GUI implements ActionListener {
 //            }
 
         } else if (e.getSource() == buttonSubtract) {
-            nums.setText("0");
+            String tempString;
+           if (!subtract) {
+               difference += numsToDouble(nums.getText());
+               replace = true;
+               subtract = true;
+           } else if (subtract) {
+            difference -= numsToDouble(nums.getText());
+            tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
+            nums.setText(tempString);
+            replace = true;
+           }
         } else if (e.getSource() == buttonMultiply) {
-            nums.setText("0");
+            String tempString;
+            if (!multiply) {
+                product += numsToDouble(nums.getText());
+                multiply = true;
+                replace = true;
+            } else if (multiply) {
+                product *= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+                nums.setText(tempString);
+                replace = true;
+            }
         } else if (e.getSource() == buttonDivide) {
             nums.setText("0");
         }
