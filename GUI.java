@@ -247,6 +247,7 @@ public class GUI implements ActionListener {
         buttonDot.addActionListener(this);
         buttonClear.addActionListener(this);
         buttonPercentage.addActionListener(this);
+        buttonNegate.addActionListener(this);
 
 
 //        g.setFont(new Font("Times New Roman", Font.PLAIN, 50));
@@ -443,7 +444,6 @@ public class GUI implements ActionListener {
             sum = 0;
             subtract = false;
             difference = 0;
-            
         } else if (e.getSource() == buttonEqual) {
             String tempString;
             if (add) {
@@ -459,9 +459,13 @@ public class GUI implements ActionListener {
                 difference = 0;
                 subtract = false;
             } else if (divide) {
-                //TODO: Create divide button function.
+                quotient /= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
+                nums.setText(tempString);
+                divide = false;
+                quotient = 0;
+                replace = true;
             } else if (multiply) {
-                //TODO: Create mutiply button function.
                 product *= numsToDouble(nums.getText());
                 tempString = removeEndDot(removeZeroes(String.valueOf(product)));
                 nums.setText(tempString);
@@ -546,7 +550,7 @@ public class GUI implements ActionListener {
         } else if (e.getSource() == buttonMultiply) {
             String tempString;
             if (!multiply) {
-                product += numsToDouble(nums.getText());
+                product = numsToDouble(nums.getText());
                 multiply = true;
                 replace = true;
             } else if (multiply) {
@@ -556,7 +560,23 @@ public class GUI implements ActionListener {
                 replace = true;
             }
         } else if (e.getSource() == buttonDivide) {
-            nums.setText("0");
+            String tempString;
+            if (!divide) {
+                quotient = numsToDouble(nums.getText());
+                replace = true;
+                divide = true;
+            } else if (divide) {
+                quotient /= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
+                nums.setText(tempString);
+                replace = true;
+            }
+        } else if (e.getSource() == buttonNegate) {
+            if (numsToDouble(nums.getText()) < 0) {
+                nums.setText(nums.getText().substring(1));
+            } else if (numsToDouble(nums.getText()) > 0) {
+                nums.setText("-" + nums.getText());
+            }
         }
     }
 
@@ -571,7 +591,7 @@ public class GUI implements ActionListener {
     private String removeZeroes(String s) {
         if (s.equals("0")) {
             return s;
-        } else if (s.length() > 0 &&s.charAt(s.length()-1) == '0') {
+        } else if (s.length() > 0 && s.charAt(s.length()-1) == '0') {
             s = s.substring(0, s.length()-1);
             return removeZeroes(s);
         } else {
