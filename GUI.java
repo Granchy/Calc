@@ -317,10 +317,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("0");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("0");
             } else {
                 nums.setText(nums.getText() + "0");
@@ -329,10 +329,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("1");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("1");
             } else {
                 nums.setText(nums.getText() + "1");
@@ -341,10 +341,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("2");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("2");
             } else {
                 nums.setText(nums.getText() + "2");
@@ -353,7 +353,7 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("3");
                 replace = false;
             } else if (nums.getText().equals("0")) {
@@ -365,7 +365,7 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("4");
                 replace = false;
             } else if (nums.getText().equals("0")) {
@@ -377,10 +377,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("5");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("5");
             } else {
                 nums.setText(nums.getText() + "5");
@@ -389,10 +389,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("6");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("6");
             } else {
                 nums.setText(nums.getText() + "6");
@@ -401,10 +401,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("7");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("7");
             } else {
                 nums.setText(nums.getText() + "7");
@@ -413,10 +413,10 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("8");
                 replace = false;
-            }else if (nums.getText().equals("0")) {
+            } else if (nums.getText().equals("0")) {
                 nums.setText("8");
             } else {
                 nums.setText(nums.getText() + "8");
@@ -425,7 +425,7 @@ public class GUI implements ActionListener {
             if (dot.equals(".")) {
                 nums.setText(nums.getText() + dot);
                 dot = "";
-            } else if (replace){
+            } else if (replace) {
                 nums.setText("9");
                 replace = false;
                 add = false;
@@ -446,7 +446,25 @@ public class GUI implements ActionListener {
             difference = 0;
         } else if (e.getSource() == buttonEqual) {
             String tempString;
-            if (add) {
+            if (divide) {
+                quotient /= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
+                nums.setText(tempString);
+                divide = false;
+                quotient = 0;
+                replace = true;
+            } else if (multiply) {
+                product *= numsToDouble(nums.getText());
+                tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+                if (add) {
+                    tempString = removeEndDot(removeZeroes(String.valueOf(product + sum)));
+                } else if (subtract) {
+                    tempString = removeEndDot(removeZeroes(String.valueOf(difference - product)));
+                }
+                nums.setText(tempString);
+                multiply = false;
+                product = 0;
+            } else if (add) {
                 sum += numsToDouble(nums.getText());
                 tempString = removeEndDot(removeZeroes(String.valueOf(sum)));
                 nums.setText(tempString);
@@ -458,19 +476,6 @@ public class GUI implements ActionListener {
                 nums.setText(tempString);
                 difference = 0;
                 subtract = false;
-            } else if (divide) {
-                quotient /= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
-                nums.setText(tempString);
-                divide = false;
-                quotient = 0;
-                replace = true;
-            } else if (multiply) {
-                product *= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(product)));
-                nums.setText(tempString);
-                multiply = false;
-                product = 0;
             }
 //            newDouble = numsToDouble(nums.getText());
 //            String tempString = "";
@@ -514,21 +519,13 @@ public class GUI implements ActionListener {
 //            }
             //TODO
         } else if (e.getSource() == buttonPercentage) {
-            String tempString = "";
-            BigDecimal bd = new BigDecimal(numsToDouble(nums.getText())/100.0);
+            String tempString;
+            BigDecimal bd = new BigDecimal(numsToDouble(nums.getText()) / 100.0);
             bd = bd.setScale(16, RoundingMode.HALF_UP);
             tempString = removeEndDot(removeZeroes(String.valueOf(bd)));
             nums.setText(tempString);
         } else if (e.getSource() == buttonAdd) {
-            sum += numsToDouble(nums.getText());
-            String tempString = String.valueOf(sum);
-            if (add) {
-                tempString = removeEndDot(removeZeroes(tempString));
-                nums.setText(tempString);
-            }
-            add = true;
-            replace = true;
-
+            add();
 //            if (isDouble(nums.getText())) {
 //                lastDouble = numsToDouble(nums.getText());
 //            } else {
@@ -536,41 +533,30 @@ public class GUI implements ActionListener {
 //            }
 
         } else if (e.getSource() == buttonSubtract) {
-            String tempString;
-           if (!subtract) {
-               difference += numsToDouble(nums.getText());
-               replace = true;
-               subtract = true;
-           } else if (subtract) {
-            difference -= numsToDouble(nums.getText());
-            tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
-            nums.setText(tempString);
-            replace = true;
-           }
+            if (add || divide || multiply) {
+                equals();
+            }
         } else if (e.getSource() == buttonMultiply) {
-            String tempString;
-            if (!multiply) {
-                product = numsToDouble(nums.getText());
-                multiply = true;
-                replace = true;
-            } else if (multiply) {
-                product *= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(product)));
-                nums.setText(tempString);
-                replace = true;
+            if (add) {
+                if (!multiply) {
+                    product = numsToDouble(nums.getText());
+                    multiply = true;
+                    replace = true;
+                } else if (multiply) {
+                    String tempString;
+                    product *= numsToDouble(nums.getText());
+                    tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+                    nums.setText(tempString);
+                    replace = true;
+                }
+            } else {
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(product + sum))));
             }
         } else if (e.getSource() == buttonDivide) {
             String tempString;
-            if (!divide) {
-                quotient = numsToDouble(nums.getText());
-                replace = true;
-                divide = true;
-            } else if (divide) {
-                quotient /= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
-                nums.setText(tempString);
-                replace = true;
+            if (add) {
             }
+
         } else if (e.getSource() == buttonNegate) {
             if (numsToDouble(nums.getText()) < 0) {
                 nums.setText(nums.getText().substring(1));
@@ -591,8 +577,8 @@ public class GUI implements ActionListener {
     private String removeZeroes(String s) {
         if (s.equals("0")) {
             return s;
-        } else if (s.length() > 0 && s.charAt(s.length()-1) == '0') {
-            s = s.substring(0, s.length()-1);
+        } else if (s.length() > 0 && s.charAt(s.length() - 1) == '0') {
+            s = s.substring(0, s.length() - 1);
             return removeZeroes(s);
         } else {
             return s;
@@ -637,5 +623,91 @@ public class GUI implements ActionListener {
             System.out.println("Invalid integer format");
         }
         return i;
+    }
+
+    private void add() {
+        sum += numsToDouble(nums.getText());
+        String tempString = String.valueOf(sum);
+        if (add) {
+            tempString = removeEndDot(removeZeroes(tempString));
+            nums.setText(tempString);
+        }
+        add = true;
+        replace = true;
+    }
+
+    private double subtract(double x) {
+        return difference - x;
+//        String tempString;
+//        if (!subtract) {
+//            difference += numsToDouble(nums.getText());
+//            replace = true;
+//            subtract = true;
+//        } else if (subtract) {
+//            difference -= numsToDouble(nums.getText());
+//            tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
+//            nums.setText(tempString);
+//            replace = true;
+//        }
+    }
+
+    private double multiply(double x) {
+        return x * product;
+//        String tempString;
+//        if (!multiply) {
+//            product = numsToDouble(nums.getText());
+//            multiply = true;
+//            replace = true;
+//        } else if (multiply) {
+//            product *= numsToDouble(nums.getText());
+//            tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+//            nums.setText(tempString);
+//            replace = true;
+//        }
+    }
+
+    private double divide(double x) {
+        return quotient / x;
+//        String tempString;
+//        if (!divide) {
+//            quotient = numsToDouble(nums.getText());
+//            replace = true;
+//            divide = true;
+//        } else if (divide) {
+//            quotient /= numsToDouble(nums.getText());
+//            tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
+//            nums.setText(tempString);
+//            replace = true;
+//        }
+    }
+
+    private void equals() {
+        String tempString;
+        if (add) {
+            sum += numsToDouble(nums.getText());
+            tempString = removeEndDot(removeZeroes(String.valueOf(sum)));
+            nums.setText(tempString);
+            sum = 0;
+            add = false;
+        } else if (subtract) {
+            difference -= numsToDouble(nums.getText());
+            tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
+            nums.setText(tempString);
+            difference = 0;
+            subtract = false;
+        } else if (divide) {
+            quotient /= numsToDouble(nums.getText());
+            tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
+            nums.setText(tempString);
+            divide = false;
+            quotient = 0;
+            replace = true;
+        } else if (multiply) {
+            product *= numsToDouble(nums.getText());
+            tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+            nums.setText(tempString);
+            multiply = false;
+            product = 0;
+        }
     }
 }
