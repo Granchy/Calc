@@ -44,16 +44,11 @@ public class GUI implements ActionListener {
     private String someString = "0";
     private JLabel nums;
 
-    private int newInt = 0;
-    private int lastInt = 0;
-
-    private double newDouble = 0;
-    private double lastDouble = 0;
-
     private double sum = 0;
     private double quotient = 0;
     private double difference = 0;
     private double product = 0;
+    private double result = 0;
 
     boolean replace = false;
 
@@ -449,80 +444,35 @@ public class GUI implements ActionListener {
             divide = false;
             quotient = 0;
         } else if (e.getSource() == buttonEqual) {
-            String tempString;
             replace = true;
             if (divide) {
                 quotient /= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(quotient)));
-                nums.setText(tempString);
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
                 divide = false;
                 quotient = 0;
-                replace = true;
             } else if (multiply) {
                 product *= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(product)));
-                if (add) {
-                    sum += product;
-                    tempString = removeEndDot(removeZeroes(String.valueOf(sum)));
-                } else if (subtract) {
-                    tempString = removeEndDot(removeZeroes(String.valueOf(difference - product)));
-                }
-                nums.setText(tempString);
+//                if (add) {
+//                    sum += product;
+//                    tempString = removeEndDot(removeZeroes(String.valueOf(sum)));
+//                } else if (subtract) {
+//                    difference -= product;
+//                    tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
+//                }
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(product))));
                 multiply = false;
                 product = 0;
             } else if (add) {
                 sum += numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(sum)));
-                nums.setText(tempString);
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
                 sum = 0;
                 add = false;
             } else if (subtract) {
                 difference -= numsToDouble(nums.getText());
-                tempString = removeEndDot(removeZeroes(String.valueOf(difference)));
-                nums.setText(tempString);
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(difference))));
                 difference = 0;
                 subtract = false;
             }
-//            newDouble = numsToDouble(nums.getText());
-//            String tempString = "";
-//            if (add) {
-//                lastDouble += newDouble;
-//                newDouble = 0;
-//            }
-//            tempString = String.valueOf(lastDouble);
-//            for (int i = tempString.length() - 1; i >= 0; i--) {
-//                if (tempString.charAt(i) == '0') {
-//                    tempString = removeZeroes(tempString);
-//                } else {
-//                    break;
-//                }
-//            }
-//            tempString = removeEndDot(tempString);
-//            nums.setText(tempString);
-//            if (isDouble(nums.getText())) {
-//                try {
-//                    newDouble = Double.parseDouble(nums.getText());
-//                } catch (NumberFormatException exception) {
-//                    nums.setText("Error");
-//                    System.out.println("Invalid double format");
-//                }
-//            } else {
-//                try {
-//                    newInt = Integer.parseInt(nums.getText());
-//                } catch (NumberFormatException exception) {
-//                    nums.setText("Error");
-//                    System.out.println("Invalid integer format");
-//                }
-//            }
-//            if (add) {
-////                if (isDouble(nums.getText())) {
-////                    nums.setText(String.valueOf(lastDouble + newDouble));
-////
-////                } else {
-////                    nums.setText(String.valueOf(lastInt + newInt));
-////                }
-////                add = false;
-//            }
             //TODO
         } else if (e.getSource() == buttonPercentage) {
             String tempString;
@@ -531,72 +481,148 @@ public class GUI implements ActionListener {
             tempString = removeEndDot(removeZeroes(String.valueOf(bd)));
             nums.setText(tempString);
         } else if (e.getSource() == buttonAdd) {
-            if (multiply) {
-                product *= numsToDouble(nums.getText());
-                multiply = false;
+            if (divide) {
+                quotient /= numsToDouble(nums.getText());
+                divide = false;
                 if (!add) {
-                    sum += product;
-                    nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
-                    replace = true;
-                    add = true;
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
+                    sum = quotient;
                 } else if (add) {
                     sum += numsToDouble(nums.getText());
                     nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
-                    replace = true;
                 }
+            } else if (multiply) {
+                product *= numsToDouble(nums.getText());
+                multiply = false;
+                if (!add) {
+                    sum = product;
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
+                } else if (add) {
+                    sum += numsToDouble(nums.getText());
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
+                }
+            } else if (subtract) {
+                subtract = false;
+                difference -= numsToDouble(nums.getText());
+                sum = difference;
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
             } else {
                 if (!add) {
                     sum = numsToDouble(nums.getText());
-                    add = true;
-                    replace = true;
-                } else if (add) {;
+                    result = sum;
+                } else if (add) {
                     sum += numsToDouble(nums.getText());
                     nums.setText(removeEndDot(removeZeroes(String.valueOf(sum))));
-                    replace = true;
+                    result = sum;
                 }
             }
-//            if (isDouble(nums.getText())) {
-//                lastDouble = numsToDouble(nums.getText());
-//            } else {
-//                lastInt = numsToInt(nums.getText());
-//            }
-
+            add = true;
+            replace = true;
         } else if (e.getSource() == buttonSubtract) {
-            if (add || divide || multiply) {
-                equals();
-            }
+          if (divide) {
+              quotient /= numsToDouble(nums.getText());
+              divide = false;
+              if (!subtract) {
+                  nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
+                  difference = quotient;
+              } else if (subtract) {
+                  difference -= numsToDouble(nums.getText());
+                  nums.setText(removeEndDot(removeZeroes(String.valueOf(difference))));
+              }
+          } else if (multiply) {
+              product *= numsToDouble(nums.getText());
+              multiply = false;
+              if (!subtract) {
+                  difference = product;
+                  result += product;
+                  nums.setText(removeEndDot(removeZeroes(String.valueOf(result))));
+              } else if (subtract) {
+                  difference -= numsToDouble(nums.getText());
+                  nums.setText(removeEndDot(removeZeroes(String.valueOf(difference))));
+              }
+          } else if (add) {
+              add = false;
+              sum += numsToDouble(nums.getText());
+              difference = sum;
+              nums.setText(removeEndDot(removeZeroes(String.valueOf(difference))));
+          } else {
+              if (!subtract) {
+                  difference = numsToDouble(nums.getText());
+              } else if (subtract) {
+                  difference -= numsToDouble(nums.getText());
+                  nums.setText(removeEndDot(removeZeroes(String.valueOf(difference))));
+              }
+          }
+          subtract = true;
+          replace = true;
         } else if (e.getSource() == buttonMultiply) {
             if (add) {
+                add = false;
                 if (!multiply) {
                     product = numsToDouble(nums.getText());
-                    multiply = true;
-                    replace = true;
                 } else if (multiply) {
-                    String tempString;
                     product *= numsToDouble(nums.getText());
-                    tempString = removeEndDot(removeZeroes(String.valueOf(product)));
-                    nums.setText(tempString);
-                    replace = true;
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(product))));
                 }
-                add = false;
+            } else if (subtract) {
+                subtract = false;
+                if (!multiply) {
+                    product = numsToDouble(nums.getText());
+                } else if (multiply) {
+                    product *= numsToDouble(nums.getText());
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(product))));
+                }
+            } else if (divide) {
+                divide = false;
+                quotient /= numsToDouble(nums.getText());
+                product = quotient;
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
             } else {
                 if (!multiply) {
                     product = numsToDouble(nums.getText());
-                    multiply = true;
-                    replace = true;
                 } else if (multiply) {
                     String tempString;
                     product *= numsToDouble(nums.getText());
                     tempString = removeEndDot(removeZeroes(String.valueOf(product)));
                     nums.setText(tempString);
-                    replace = true;
                 }
             }
+            multiply = true;
+            replace = true;
         } else if (e.getSource() == buttonDivide) {
-            String tempString;
             if (add) {
+                add = false;
+                if (!divide) {
+                    quotient = numsToDouble(nums.getText());
+                } else if (divide) {
+                    quotient /= numsToDouble(nums.getText());
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
+                }
+            } else if (subtract) {
+                subtract = false;
+                if (!divide) {
+                    quotient = numsToDouble(nums.getText());
+                } else if (divide) {
+                    quotient /= numsToDouble(nums.getText());
+                    nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
+                }
+            } else if (multiply) {
+                multiply = false;
+                product *= numsToDouble(nums.getText());
+                quotient = product;
+                nums.setText(removeEndDot(removeZeroes(String.valueOf(quotient))));
+            } else {
+                if (!multiply) {
+                    product = numsToDouble(nums.getText());
+                } else if (multiply) {
+                    String tempString;
+                    product *= numsToDouble(nums.getText());
+                    tempString = removeEndDot(removeZeroes(String.valueOf(product)));
+                    nums.setText(tempString);
+                }
             }
-
+            divide = true;
+            replace = true;
         } else if (e.getSource() == buttonNegate) {
             if (numsToDouble(nums.getText()) < 0) {
                 nums.setText(nums.getText().substring(1));
@@ -604,6 +630,10 @@ public class GUI implements ActionListener {
                 nums.setText("-" + nums.getText());
             }
         }
+    }
+
+    private void executeOperations() {
+
     }
 
     private String removeEndDot(String s) {
